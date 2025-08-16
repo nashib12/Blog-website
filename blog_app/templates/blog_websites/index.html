@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}
+  Home
+{% endblock title %}
+{% block content %}
+  {% if blog %}
+    {% for item in blog %}
+      {{item.content|safe}}
+    {% endfor %}
+  {% endif %}
+{% endblock content %}
