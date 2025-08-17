@@ -3,9 +3,20 @@
   Home
 {% endblock title %}
 {% block content %}
-  {% if blog %}
-    {% for item in blog %}
-      {{item.content|safe}}
-    {% endfor %}
+  {% if request.user.is_authenticated %}
+    <h1>Welcome {{request.user.username}}</h1><br><br>
+    {% if profile %}
+      {% for item in profile %}
+        <h2><strong>Username:</strong>{{user.username}}</h2><br>
+        <h3><strong>Contact:</strong>{{item.contact}}</h3><br>
+        <strong>Image:</strong><br><img src="{{ item.profile_pic.url }}" alt="Profile picture">
+      {% endfor %} 
+    {% endif %}
+    <br><br>
+    <a href="{% url 'log_out' %}"><button>Logout</button></a>
+  {% else %}
+  <h1>Home</h1><br><br>
+  <a href="{% url 'registration' %}"><button>Registration</button></a>
+  <a href="{% url 'log_in' %}"><button>Login</button></a>
   {% endif %}
 {% endblock content %}

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 EXTERNAL_APPS = [
     'blog_app',
     'tinymce',
+    'phonenumber_field',
 ]
 
 INSTALLED_APPS.extend(EXTERNAL_APPS)
