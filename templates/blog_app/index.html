@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}
   Home
 {% endblock title %}
@@ -9,13 +10,17 @@
       {% for item in profile %}
         <h2><strong>Username:</strong>{{user.username}}</h2><br>
         <h3><strong>Contact:</strong>{{item.contact}}</h3><br>
-        <strong>Image:</strong><br><img src="{{ item.profile_pic.url }}" alt="Profile picture">
+        <strong>Image:</strong><br>
+        {% if item.profile_pic %}
+          <img src="{{ item.profile_pic.url }}" alt="">
+        {% endif %}
       {% endfor %} 
     {% endif %}
     <br><br>
     <a href="{% url 'log_out' %}"><button>Logout</button></a>
   {% else %}
   <h1>Home</h1><br><br>
+  <img src="{% static 'images/profile_img.jpg' %}" alt=""><br>
   <a href="{% url 'registration' %}"><button>Registration</button></a>
   <a href="{% url 'log_in' %}"><button>Login</button></a>
   {% endif %}

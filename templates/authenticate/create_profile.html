@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}
+  Create Profile
+{% endblock title %}
+{% block content %}
+  <h1>Create your profile</h1>
+  <form action="{% url 'create-profile' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Create Profile</button>
+  </form>
+{% endblock content %}

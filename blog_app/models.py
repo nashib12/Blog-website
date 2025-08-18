@@ -19,7 +19,7 @@ class Blog(models.Model):
 class Profile(models.Model):
     id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     contact = models.IntegerField(null=True, blank=True)
-    profile_pic = models.ImageField(upload_to="profile_img/", blank=True, null=True, default="imgg/profile_img.jpg")
+    profile_pic = models.ImageField(default="profile.jpg", blank=True, null=True)
     
     class Meta:
         db_table = 'user_profile_list'

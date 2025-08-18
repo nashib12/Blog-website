@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 
 from .models import Blog, UserMessage, Profile
-from .forms import UserLoginForm
+from .forms import UserLoginForm, ProfileCreationForm
 
 # Create your views here.
 def home(request):
@@ -19,7 +19,7 @@ def home(request):
         "profile" : profile,
         "message" : message,
     }
-    return render(request, "blog_websites/index.html", cont_dict)
+    return render(request, "blog_app/index.html", cont_dict)
 
 #------------------- Authentication ----------------------
 def registration(request):
@@ -33,7 +33,7 @@ def registration(request):
         auth = authenticate(request, username=username, password=password)
         if auth is not None:
             login(request, user)
-            return redirect("home")
+            return redirect("create-profile")
     return render(request, "authenticate/registration.html", {"form":form})
 
 def log_in(request):
@@ -51,6 +51,16 @@ def log_in(request):
 def log_out(request):
     logout(request)
     return redirect("home")
+
+def create_profile(request):
+    user = Profile.objects.get(id_id=request.user.id)
+    form = ProfileCreationForm(instance=user)
+    if request.method == "POST":
+        form = ProfileCreationForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+    return render(request, "authenticate/create_profile.html", {"form":form})
         
         
         
