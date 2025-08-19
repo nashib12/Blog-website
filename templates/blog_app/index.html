@@ -4,24 +4,23 @@
   Home
 {% endblock title %}
 {% block content %}
-  {% if request.user.is_authenticated %}
-    <h1>Welcome {{request.user.username}}</h1><br><br>
-    {% if profile %}
-      {% for item in profile %}
-        <h2><strong>Username:</strong>{{user.username}}</h2><br>
-        <h3><strong>Contact:</strong>{{item.contact}}</h3><br>
-        <strong>Image:</strong><br>
-        {% if item.profile_pic %}
-          <img src="{{ item.profile_pic.url }}" alt="">
+{% if request.user.is_authenticated %}
+<div class="container mt-5">
+  <div class="row">
+    {% for item in blog %}
+      <div class="col-7 border border-dark rounded-3">
+        {% if item.blog_image %}
+          <img src="{{item.blog_image.url}}" alt="Blog Image" class="img-fluid w-50 h-50">
         {% endif %}
-      {% endfor %} 
-    {% endif %}
-    <br><br>
-    <a href="{% url 'log_out' %}"><button>Logout</button></a>
-  {% else %}
-  <h1>Home</h1><br><br>
-  <img src="{% static 'images/profile_img.jpg' %}" alt=""><br>
-  <a href="{% url 'registration' %}"><button>Registration</button></a>
-  <a href="{% url 'log_in' %}"><button>Login</button></a>
-  {% endif %}
+        <h4>{{item.title}}</h4>
+        <p>{{item.content|safe}}</p>
+        <a href="{%  url 'update-blog' item.id %}" class="btn btn-md btn-primary">Update Blog</a>
+        <a href="{%  url 'delete-blog' item.id %}" class="btn btn-md btn-danger">Delete Blog</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<h1>Home</h1>
+
 {% endblock content %}

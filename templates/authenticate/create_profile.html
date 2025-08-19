@@ -3,10 +3,37 @@
   Create Profile
 {% endblock title %}
 {% block content %}
-  <h1>Create your profile</h1>
-  <form action="{% url 'create-profile' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Create Profile</button>
-  </form>
+<div class="container">
+  <div class="custom-box">
+    <h2 class="text-center fw-bold mb-3">{{request.user.username}}'s profile</h2>
+    <form action="{% url 'create-profile' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label fs-5" for="first_name">First Name</label>
+        {{form.first_name}}
+      </div>
+      <div class="mb-3">
+        <label class="form-label fs-5" for="last_name">Last Name</label>
+        {{form.last_name}}
+      </div>
+      <div class="row mb-3">
+        <label for="" class="form-label fs-5">Date of Birth</label>
+        <div class="col-4">{{form.birth_year}}</div>
+        <div class="col-5">{{form.birth_month}}</div>
+        <div class="col-3">{{form.birth_day}}</div>
+      </div>
+      <div class="mb-3">
+        <label for="gender" class="form-label fs-5">Choose a gender</label>
+        {{form.gender}}
+      </div>
+      <div class="mb-3">
+        <label for="profile_pic" class="form-label fs-5">Profile picture</label>
+        {{form.profile_pic}}
+      </div>
+      <div class="my-3">
+        <button class="btn btn-lg w-100 border-dakr border-2 rounded-3 btn-dark fs-4" type="submit">Submit your data</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock content %}

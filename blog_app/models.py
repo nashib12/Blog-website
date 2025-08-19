@@ -1,38 +1,44 @@
 from django.db import models
 from tinymce.models import HTMLField
 from django.contrib.auth.models import User
+from calendar import month
 
 # Create your models here.
-class Blog(models.Model):
-    name = models.CharField(max_length=100)
-    content = HTMLField()
+class UserProfileList(models.Model):
+    profile = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    birth_day = models.PositiveIntegerField(null=True, blank=True)
+    birth_month = models.PositiveIntegerField(null=True, blank=True)
+    birth_year = models.PositiveIntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=20, blank=True, null=True)
+    profile_pic = models.ImageField(default="profile_img.jpg", blank=True)
+    is_active = models.BooleanField(default=True)
     
     def __str__(self):
-        return self.name
+        return (f"{self.first_name} {self.last_name}")
+    
+    class Meta:
+        db_table = 'User Profile'
+        managed = True
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
+
+class Blog(models.Model):
+    name = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    content = HTMLField()
+    blog_image = models.ImageField(upload_to="blog_image/", blank=True, null=True)
+    created_ad = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.title
     
     class Meta:
         db_table = 'Blog Post'
         managed = True
         verbose_name = 'Blog'
         verbose_name_plural = 'Blogs'
-    
-class Profile(models.Model):
-    id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    contact = models.IntegerField(null=True, blank=True)
-    profile_pic = models.ImageField(default="profile.jpg", blank=True, null=True)
-    
-    class Meta:
-        db_table = 'user_profile_list'
-        managed = True
-        verbose_name = 'Profile'
-        verbose_name_plural = 'Profiles'
-
-class UserMessage(User):
-    contact = models.IntegerField(blank=True, null=True)
-    message = models.TextField()
-    
-    class Meta:
-        db_table = 'user_message'
-        managed = True
-        verbose_name = 'Message'
-        verbose_name_plural = 'Messages'
+        

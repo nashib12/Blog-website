@@ -1,0 +1,34 @@
+/* Google Brand Colors */
+.fa-google {
+    color: #DB4437; /* Google Red */
+}
+
+/* Facebook Brand Colors */
+.fa-facebook,
+.fa-facebook-f {
+    color: #1877F2; /* Facebook Blue */
+}
+
+/* X (Twitter) Brand Colors */
+.fa-twitter,
+.fa-x-twitter {
+    color: #000000; /* X logo is black */
+}
+
+/* LinkedIn Brand Colors */
+.fa-linkedin,
+.fa-linkedin-in {
+    color: #0A66C2; /* LinkedIn Blue */
+}
+
+/* Optional hover effect */
+.fa-google:hover,
+.fa-facebook:hover,
+.fa-facebook-f:hover,
+.fa-twitter:hover,
+.fa-x-twitter:hover,
+.fa-linkedin:hover,
+.fa-linkedin-in:hover {
+    opacity: 0.8; /* Slight fade on hover */
+    transition: opacity 0.3s ease-in-out;
+}
