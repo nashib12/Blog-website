@@ -8,6 +8,7 @@
         <h2 class="text-center fw-bold mt-2 mb-3">Create a blog</h2>
         <form action="{% url 'create-blog' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {{ form.media }}
             <div class="mb-3"><label for="title" class="form-label fs-5">Blog Title</label>{{form.title}}</div>
             <div class="mb-3"><label for="content" class="form-label fs-5">Blog Content</label>{{form.content}}</div>
             <div class="mb-3"><label for="blog-image" class="form-label fs-5">Blog Image</label>{{form.blog_image}}</div>

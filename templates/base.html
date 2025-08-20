@@ -41,24 +41,24 @@
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
     {% if messages %}
         {% for message in messages %}
-            {% if message.tags == "success"  %}
-                <script>
-                    var delay = alertify.get("notifier", "delay");
-                    alertify.set("notifier", "delay", 4);
-                    alertify.set("notifier", "position", "top-right");
-                    alertify.success("{{message|escapejs}}");
-                    alertify.set("notifier", "delay", delay);
-                </script>
-            {% endif %}
-            {% if message.tags == "error"  %}
-                <script>
-                    var delay = alertify.get("notifier", "delay");
-                    alertify.set("notifier", "delay", 4);
-                    alertify.set("notifier", "position", "top-right");
-                    alertify.error("{{message|escapejs}}");
-                    alertify.set("notifier", "delay", delay);
-                </script>
-            {% endif %}
+          {% if message.tags == "success" %}
+            <script>
+                var delay = alertify.get("notifier", "delay");
+                alertify.set("notifier", "delay", 2);
+                alertify.set("notifier", "position", "top-right");
+                alertify.success("{{message|escapejs}}");
+                alertify.set("notifier", "delay", delay);
+            </script>
+          {% endif %}
+          {% if message.tags == "error" %}
+            <script>
+                var delay = alertify.get("notifier", "delay");
+                alertify.set("notifier", "delay", 2);
+                alertify.set("notifier", "position", "top-right");
+                alertify.error("{{message|escapejs}}");
+                alertify.set("notifier", "delay", delay);
+            </script>
+          {% endif %}
         {% endfor %}
     {% endif %}
 </body>

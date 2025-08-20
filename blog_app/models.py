@@ -42,3 +42,17 @@ class Blog(models.Model):
         verbose_name = 'Blog'
         verbose_name_plural = 'Blogs'
         
+class Comment(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    commenter = models.ForeignKey(UserProfileList, on_delete=models.CASCADE)
+    comments = HTMLField()
+    commented_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    block_comment = models.BooleanField(default=False)
+    
+    class Meta:
+        db_table = 'Blog Comment'
+        managed = True
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        

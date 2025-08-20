@@ -1,38 +1,46 @@
 import calendar
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
+from tinymce.widgets import TinyMCE
 
-from .models import UserProfileList, Blog
+from .models import UserProfileList, Blog, Comment
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control fs-4', 'id' : 'username'}))
     password = forms.CharField(label="", widget=forms.PasswordInput(attrs={'class' : 'form-control fs-4', 'id' : 'password'}))
-    
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'class' : 'form-control fs-4', 'id' : 'email'}))
-    
-    class Meta:
-        model =  User
-        fields = ('username', 'email', 'password1', 'password2')
-        
-    def __init__(self, *args, **kwargs):
-        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
-        
-        self.fields['username'].widget.attrs['class'] = 'form-control fs-4'
-        self.fields['username'].widget.attrs['id'] = 'username'
-        self.fields['username'].label = ''
-        
-        self.fields['password1'].widget.attrs['class'] = 'form-control fs-4'
-        self.fields['password1'].widget.attrs['id'] = 'password'
-        self.fields['password1'].label = ''
-        
-        self.fields['password2'].widget.attrs['class'] = 'form-control fs-4'
-        self.fields['password2'].widget.attrs['id'] = 'password1'
-        self.fields['password2'].label = ''
 
+class CustomUserCreationForm(forms.Form):
+    username = forms.CharField(label='', widget=forms.TextInput(attrs={'class' : 'form-control fs-4', 'id' : 'username'}))
+    email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'class' : 'form-control fs-4', 'id' : 'email'}))
+    password = forms.CharField(label='', widget=forms.PasswordInput(attrs={'class' : 'form-control fs-4' , 'id' : 'password'}))
+    cpassword = forms.CharField(label='', widget=forms.PasswordInput(attrs={'class' : 'form-control fs-4' , 'id' : 'password1'}))
+
+#  Create a user form with cutsom email filed using user creation CustomUserCreationForm
+# from django.contrib.auth.forms import UserCreationForm  
+# class CustomUserCreationForm(UserCreationForm):
+#     email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'class' : 'form-control fs-4', 'id' : 'email'}))
+    
+#     class Meta:
+#         model =  User
+#         fields = ('username', 'email', 'password1', 'password2')
+        
+#     def __init__(self, *args, **kwargs):
+#         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        
+#         self.fields['username'].widget.attrs['class'] = 'form-control fs-4'
+#         self.fields['username'].widget.attrs['id'] = 'username'
+#         self.fields['username'].label = ''
+        
+#         self.fields['password1'].widget.attrs['class'] = 'form-control fs-4'
+#         self.fields['password1'].widget.attrs['id'] = 'password'
+#         self.fields['password1'].label = ''
+        
+#         self.fields['password2'].widget.attrs['class'] = 'form-control fs-4'
+#         self.fields['password2'].widget.attrs['id'] = 'password1'
+#         self.fields['password2'].label = ''
+    
 class ProfileCreationForm(forms.ModelForm):
     class Meta:
         gender_choices = [
@@ -76,6 +84,35 @@ class BlogCreationForm(forms.ModelForm):
         
         widgets = {
             'title' : forms.TextInput(attrs={'class' : 'form-control fs-4', 'id' : 'title'}),
-            'content' : forms.Textarea(attrs={'class' : 'form-control fs-4', 'id' : 'content'}),
+            'content' : TinyMCE(attrs={'cols': 15, 'row' : 10,'class' : 'form-control fs-4', 'id' : 'content'}),
             'blog_image' : forms.FileInput(attrs={'class' : 'form-control fs-4', 'id' : 'blog-image'}),
+        }
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+     def __init__(self, *args, **kwargs):
+        super(CustomPasswordChangeForm, self).__init__(*args, **kwargs)
+        
+        self.fields['old_password'].label = ''
+        self.fields['old_password'].widget.attrs['class'] = 'form-control fs-4'
+        self.fields['old_password'].widget.attrs['id'] = 'old_password'
+        
+        self.fields['new_password1'].label = ''
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control fs-4'
+        self.fields['new_password1'].widget.attrs['id'] = 'password'
+        
+        self.fields['new_password2'].label = ''
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control fs-4'
+        self.fields['new_password2'].widget.attrs['id'] = 'password1'
+        
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('comments', )
+        
+        labels = {
+            'comments' : '',
+        }
+        
+        widgets = {
+            'comments' : TinyMCE(attrs={'row' : 10, 'cols' : 5, 'class' : 'form-control fs-5', 'id' : 'comment`'}),
         }

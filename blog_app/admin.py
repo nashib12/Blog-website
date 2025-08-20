@@ -12,5 +12,5 @@ class ProfileAdmin(admin.ModelAdmin):
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('name', 'title')
     ordering = ('title',)
-    list_filter = ('title', )
+    list_filter = ('title', 'name')
     fields = ['name', 'title' , 'content', 'blog_image']

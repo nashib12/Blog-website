@@ -30,11 +30,13 @@
                     <i class="fa-regular fa-user me-2"></i>&nbsp;{{ request.user.username }}&nbsp;
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end fs-4 py-3 px-1">
-                    <li><a class="dropdown-item" href="#"><i class="fa-regular fa-id-card me-2"></i>&nbsp;View Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'create-profile' %}"><i class="fa-regular fa-id-card me-2"></i>&nbsp;Update Profile</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key me-2"></i>&nbsp;Change Password</a></li>
-                    <li><hr class="dropdown-divider"></li>                    
-                    <li><a class="dropdown-item" href="{% url 'create-blog' %}"><i class="fa-solid fa-blog me-2"></i>&nbsp;Create a blog</a></li>
+                    {% if not request.user.is_superuser %}
+                        <li><a class="dropdown-item" href="{% url 'view-profile' %}"><i class="fa-regular fa-id-card me-2"></i>&nbsp;View Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'create-profile' %}"><i class="fa-regular fa-id-card me-2"></i>&nbsp;Update Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'create-blog' %}"><i class="fa-solid fa-blog me-2"></i>&nbsp;Create a blog</a></li>
+                        <li><hr class="dropdown-divider"></li>  
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'change-password' %}"><i class="fa-solid fa-key me-2"></i>&nbsp;Change Password</a></li>                
                     <li><a class="dropdown-item text-danger" href="{% url 'log-out' %}"><i class="fa-solid fa-right-from-bracket me-2"></i>&nbsp;Logout</a></li>
                     </ul>
                 </li>

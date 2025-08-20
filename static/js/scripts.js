@@ -57,3 +57,14 @@ document.getElementById('show_password1').addEventListener('click', function() {
     this.textContent = "Show Password";
   }
 });
+
+document.getElementById('show_password2').addEventListener('click', function() {
+  const passwordField = document.getElementById('old_password');
+  if (passwordField.type === 'password') {
+    passwordField.type = 'text';
+    this.textContent = "Hide Password";
+  } else {
+    passwordField.type = 'password';
+    this.textContent = "Show Password";
+  }
+});

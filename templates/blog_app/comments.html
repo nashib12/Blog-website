@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}
+  Comment
+{% endblock title %}
+{% block content %}
+<div class="container">
+  <div class="custom-box">
+    <h2 class="text-center fw-bold mb-3">Add a Comment</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          {{form.media}}
+          {{form.as_p}}
+        </div>
+        <div class="mb-3 d-flex flex-row align-items-center justify-content-center">
+          <button class="btn btn-lg btn-light text-dark border border-3 rounded-3 border-dark w-100 fs-3 p-2 fw-bold" type="submit">Post Comment</button>
+        </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
