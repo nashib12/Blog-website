@@ -44,7 +44,7 @@
           {% if message.tags == "success" %}
             <script>
                 var delay = alertify.get("notifier", "delay");
-                alertify.set("notifier", "delay", 2);
+                alertify.set("notifier", "delay", 5);
                 alertify.set("notifier", "position", "top-right");
                 alertify.success("{{message|escapejs}}");
                 alertify.set("notifier", "delay", delay);
@@ -53,7 +53,7 @@
           {% if message.tags == "error" %}
             <script>
                 var delay = alertify.get("notifier", "delay");
-                alertify.set("notifier", "delay", 2);
+                alertify.set("notifier", "delay", 5);
                 alertify.set("notifier", "position", "top-right");
                 alertify.error("{{message|escapejs}}");
                 alertify.set("notifier", "delay", delay);

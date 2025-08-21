@@ -80,3 +80,8 @@ body {
   .blog-text {
     text-align: justify;
   }
+
+  .selected_link{
+    opacity: 0.75;
+    color: #1877f2 !important;
+  }

@@ -5,19 +5,19 @@
 {% endblock title %}
 {% block content %}
 <div class="container mt-5">
-  {% if blog %}
+
     {% for item in blog %}
     <div class="card mb-4 border-0 rounded-4 blog-container ">
 
       <!-- Post Header -->
       <div class="card-header bg-white border-1 border-bottom d-flex align-items-center py-2">
-      {% if profile %}
-            <img src="{{profile.profile_pic.url}}" alt="" class="rounded-circle me-2" style="width:45px; height:45px; object-fit:cover;">
-            <div>
-              <h6 class="mb-0 fw-bold fs-5">{{profile.first_name}} {{profile.last_name}}</h6>
-              <small class="text-muted">{{item.created_ad}} <i class="fa-solid fa-globe fs-5"></i></small>
-            </div>
-      {% endif %}
+        {% with author=item.author.profile %}
+          <img src="{{ author.profile_pic.url }}" class="rounded-circle me-2" style="width:45px;height:45px;object-fit:cover;">
+          <div>
+            <h6 class="mb-0 fw-bold fs-5">{{author.first_name}} {{author.last_name}}</h6>
+            <small class="text-muted">{{ item.created_at|timesince }}</small>&nbsp;<i class="fa-solid fa-globe"></i>
+          </div>
+        {% endwith %}
       </div>
 
       <!-- Post Body -->
@@ -43,12 +43,31 @@
           <i class="fa-solid fa-share"></i> Share
         </a>
       </div>
-        <div class="card-footer bg-white border-1 border-top d-flex justify-content-between">
-            <a href="{% url 'update-blog' item.id %}" class="btn btn-md btn-primary border-0 rounded-3 shadow-md">Update Blog</a>
-            <a href="{% url 'delete-blog' item.id %}" class="btn btn-md btn-danger border-0 rounded-3 shadow-md">Delete Blog</a>
+      <div class="card-footer bg-white border-1 border-top d-flex justify-content-between">
+        <a href="{% url 'update-blog' item.id %}" class="btn btn-md btn-primary border-0 rounded-3 shadow-md">Update Blog</a>
+        <a href="{% url 'delete-blog' item.id %}" class="btn btn-md btn-danger border-0 rounded-3 shadow-md">Delete Blog</a>
+      </div>
+    <!-- Blog Comments -->
+    {% for c in item.comments.all %}
+      <div class="card-header bg-white border-1 border-top d-flex flex-column align-items-start py-2">
+        <div class="d-flex flex-row">
+          {% with commenter=c.author.profile %}
+            <img src="{{ commenter.profile_pic.url }}" alt="" class="rounded-circle me-2" style="width:25px; height:25px; object-fit:cover;">
+            {% if commenter.first_name is none %}
+              <h6 class="fw-bold fs-5">{{c.author.username}}</h6>
+            {% else %}
+            <h6 class="fw-bold fs-5">{{ commenter.first_name }} {{ commenter.last_name }}</h6>
+            {% endif %}
+          {% endwith %}
         </div>
+        <p class="fs-5 text-muted text-start ms-5">{{ c.comments }}</p>
+      </div>
+    {% empty %}
+      <div class="px-3 text-muted">No comments yet.</div>
+    {% endfor %}
     </div>
     {% endfor %}
-  {% endif %}
-</div>
+  
 {% endblock content %}
+
+

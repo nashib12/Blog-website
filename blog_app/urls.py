@@ -18,4 +18,9 @@ urlpatterns = [
     path("delete_blog/<int:id>",delete_blog,name="delete-blog"),
     path("view_profile/",view_profile,name="view-profile"),
     path("comment/<int:id>",blog_comment,name="comment"),
+    
+    #-------------- Admin section ----------------
+    path("dashboard/",view_dashboard,name="dashboard"),
+    path("change_status/<int:id>",change_status,name="change-status"),
+    path("approve_post/<int:id>",approve_post,name="approve-post"),
 ]

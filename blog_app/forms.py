@@ -5,7 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
 from tinymce.widgets import TinyMCE
 
-from .models import UserProfileList, Blog, Comment
+from .models import Profile, Blog, Comment
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control fs-4', 'id' : 'username'}))
@@ -50,7 +50,7 @@ class ProfileCreationForm(forms.ModelForm):
             ('Other', 'Other'),
             ('Prefer not to say', 'Pefer not to say')
         ]
-        model = UserProfileList
+        model = Profile
         fields = ('first_name', 'last_name', 'birth_year', 'birth_month', 'birth_day', 'gender', 'profile_pic')
         labels = {
             'first_name' : '',

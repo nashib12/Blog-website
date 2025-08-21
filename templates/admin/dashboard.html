@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}
+  Dashboard
+{% endblock title %}
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1 class="text-center fw-bold mb-3">Admin Dashboard</h1>
+    <div class="container mb-3">
+        <div class="row gap-4">
+            <div class="col-1"></div>
+            <div class="col-3 shadow-sm bg-primary rounded-2 p-4 text-light opacity-75"><h3 class="text-center mb-2 fw-bold opacity-100">No. of Users</h3><p class="text-center fs-3">{{total_user}}</p></div>
+            <div class="col-3 shadow-sm bg-success rounded-2 p-4 text-light opacity-75"><h3 class="text-center mb-2 fw-bold opacity-100">No. of Posts</h3><p class="text-center fs-3">{{total_blog}}</p></div>
+        <div class="col-3 shadow-sm bg-secondary rounded-2 p-4 text-light opacity-75"><h3 class="text-center mb-2 fw-bold opacity-100">No. of Comments</h3><p class="text-center fs-3">{{comment}}</p></div>
+    </div>
+    </div>
+    <div class="row p-5">
+        <div class="col-5">
+            <h3 class="text-center fw-bold mb-3 mt-2">User Table</h3>
+            <table class="table table-light table-striped text-secondary table-bordered">
+                <thead class="table-group-divider text-center fw-bold fs-4">
+                    <tr>
+                    <th scope="col">S.N.</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">User Status</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="fs-5">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{user.first_name}}</td>
+                    <td>{{user.last_name}}</td>
+                    {% if user.is_active %}
+                        <td><span class="text-success">Active</span></td>
+                    {% else %}
+                        <td><span class="text-danger">Blocked</span></td>
+                    {% endif %}
+                    <td class="text-center my-auto"><a href="{% url 'change-status' user.user_id %}" class="text-decoration-none"><i class="fa-solid fa-ban text-dark fs-4" id="userBtn"></i></a></td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-7">
+               <h3 class="text-center fw-bold mb-3 mt-2">Post Table</h3>
+            <table class="table table-light table-striped text-secondary table-bordered">
+                <thead class="table-group-divider text-center fw-bold fs-4">
+                    <tr>
+                    <th scope="col">S.N.</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Approve/Disapprove</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="fs-5">
+                    {% for blog in blogs %}
+                    <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    {% with a=blog.author.profile  %}
+                        <td>{{a.first_name}} {{a.last_name}}</td>
+                    {% endwith %}
+                    <td>{{blog.title}}</td>
+                    {% if blog.approved %}
+                        <td><span class="text-success">Approved</span></td>
+                    {% else %}
+                        <td><span class="text-danger">Not Approved</span></td>
+                    {% endif %}
+                    <td class="text-center my-auto"><a href="{% url 'approve-post' blog.id %}" class="text-decoration-none"><i class="fa-solid fa-lock fs-4 text-dark"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
