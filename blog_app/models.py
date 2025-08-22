@@ -25,7 +25,13 @@ class Profile(models.Model):
         managed = True
         verbose_name = 'Profile'
         verbose_name_plural = 'Profiles'
-
+        
+class Tag(models.Model):
+    tag = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.tag
+    
 class Blog(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author")
     title = models.CharField(max_length=100)
@@ -34,6 +40,7 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=True)
+    tags = models.ManyToManyField(Tag, default=None, blank=True)
     
     def __str__(self):
         return self.title
@@ -57,4 +64,26 @@ class Comment(models.Model):
         managed = True
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
-        
+
+class Album(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="author")
+    title = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        db_table = 'Album Table'
+        managed = True
+        verbose_name = 'Album'
+        verbose_name_plural = 'Albums'
+
+class Gallery(models.Model):
+    album = models.ForeignKey(Album, related_name="gallery", on_delete=models.CASCADE, default=None)
+    images = models.ImageField(upload_to="gallery_image/")
+    
+    class Meta:
+        db_table = 'Gallery'
+        managed = True
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'

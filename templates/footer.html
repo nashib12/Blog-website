@@ -9,7 +9,7 @@
         <h2 class="fw-semibold">Quick Links</h2>
         <ul class="list-unstyled fs-5">
           <li><a class="footer-link text-decoration-none text-light" href="{% url 'home' %}">Home</a></li>
-          <li><a class="footer-link text-decoration-none text-light" href="#">Gallery</a></li>
+          <li><a class="footer-link text-decoration-none text-light" href="{% url 'gallery' %}">Gallery</a></li>
           <li><a class="footer-link text-decoration-none text-light" href="#">Notification</a></li>
           <li><a class="footer-link text-decoration-none text-light" href="#">Videos</a></li>
           {% if request.user.is_superuser %}

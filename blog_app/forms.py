@@ -5,7 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
 from tinymce.widgets import TinyMCE
 
-from .models import Profile, Blog, Comment
+from .models import Profile, Blog, Comment, Album, Gallery
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control fs-4', 'id' : 'username'}))
@@ -114,5 +114,38 @@ class CommentForm(forms.ModelForm):
         }
         
         widgets = {
-            'comments' : TinyMCE(attrs={'row' : 10, 'cols' : 5, 'class' : 'form-control fs-5', 'id' : 'comment`'}),
+            'comments' : forms.Textarea(attrs={'row' : 10, 'cols' : 5, 'class' : 'form-control fs-5', 'id' : 'comment`'}),
         }
+        
+class AlbumForm(forms.ModelForm):
+    class Meta:
+        model = Album
+        fields = ('title', )
+        
+        labels = {
+            'title' : '',
+        }
+        
+        widgets = {
+            'title' : forms.TextInput(attrs={'class' : 'form-control mb-3 fs-4', 'placeholder' : 'Choose your album title'})
+        }
+
+class GalleryForm(forms.ModelForm):
+    class Meta:
+        model = Gallery
+        fields = ('album', 'images')
+        
+        labels = {
+            'album' : '',
+            'images' : '',
+        }
+        
+        widgets = {
+            'album' : forms.Select(attrs={'class' : 'form-control mb-3 fs-4'}),
+            'images' : forms.FileInput(attrs={'class' : 'form-control mb-3'})
+        } 
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['album'].empty_label = "Select a album"
+        

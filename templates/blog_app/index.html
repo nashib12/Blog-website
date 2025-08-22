@@ -58,6 +58,12 @@
         </div>
         <p class="fs-5 text-muted text-start ms-5">{{ c.comments }}</p>
       </div>
+      <div class="dropdown d-flex align-items-start justify-content-end me-4">
+        <a class="text-decoration-none text-dark fs-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'delete-comment' c.id %}">Delete Comment</a></li>
+        </ul>
+      </div>
     {% empty %}
       <div class="px-3 text-muted">No comments yet.</div>
     {% endfor %}

@@ -10,7 +10,7 @@
                 <a class="nav-link text-light {% if request.path == '/' %} fs-3 selected_link  {% endif %}" href="{% url 'home' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link text-light {% if request.path == '/event/' %} selected_link  {% endif %}" href="#">Gallery</a>
+                <a class="nav-link text-light {% if request.path == '/gallery/' %} selected_link  {% endif %}" href="{% url 'gallery' %}">Gallery</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link text-light {% if request.path == '/venue/' %} selected_link  {% endif %}" href="#">Notification</a>
@@ -28,7 +28,7 @@
             <ul class="navbar-nav align-items-lg-center">
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown fs-4">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-regular fa-user me-2"></i>&nbsp;{{ request.user.username }}&nbsp;
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end fs-4 py-3 px-1">
@@ -36,6 +36,8 @@
                         <li><a class="dropdown-item" href="{% url 'view-profile' %}"><i class="fa-regular fa-id-card me-2"></i>&nbsp;View Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'create-profile' %}"><i class="fa-regular fa-id-card me-2"></i>&nbsp;Update Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'create-blog' %}"><i class="fa-solid fa-blog me-2"></i>&nbsp;Create a blog</a></li>
+                        <li><a class="dropdown-item" href="{% url 'create-album' %}"><i class="fa-solid fa-image me-2"></i>&nbsp;Create album</a></li>
+                        <li><a class="dropdown-item" href="{% url 'add-image' %}"><i class="fa-solid fa-image me-2"></i>&nbsp;Add image</a></li>
                         <li><hr class="dropdown-divider"></li>  
                     {% endif %}
                     <li><a class="dropdown-item" href="{% url 'change-password' %}"><i class="fa-solid fa-key me-2"></i>&nbsp;Change Password</a></li>                
@@ -44,7 +46,7 @@
                 </li>
                 {% else %}
                 <li class="nav-item dropdown fs-4">
-                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-regular fa-user me-2"></i>&nbsp;Account&nbsp;
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end fs-4 py-3 px-1">

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Gallery
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1>Hello</h1>
+      {% for img in gallery %}
+        <h2>Album: {{img.album_id}}</h2>
+        <img src="{{img.images.url}}" alt="" class="img-fluid ">
+      {% endfor %}
+    
+</div>  
+{% endblock content %}

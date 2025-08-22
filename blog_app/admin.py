@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Blog, Profile
+from .models import *
 # Register your models here.
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -14,3 +14,11 @@ class BlogAdmin(admin.ModelAdmin):
     ordering = ('title',)
     list_filter = ('title', 'author')
     fields = ['name', 'title' , 'content', 'blog_image']
+    
+admin.site.register(Tag)
+
+@admin.register(Album)
+class AlbumAdmin(admin.ModelAdmin):
+    list_display = ('author', 'title')
+    list_filter = ('title', )
+    
