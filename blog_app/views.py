@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -6,9 +6,10 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
+from django.urls import reverse
 
-from .models import Blog, Profile, Comment, Gallery, Album
+from .models import Blog, Profile, Comment, Album, Liked
 from .forms import *
 from .validators import *
 from .decorators import unautorized_access, admin_only
@@ -18,19 +19,19 @@ from .decorators import unautorized_access, admin_only
 def home(request):
     blogs = (Blog.objects
              .select_related('author', 'author__profile')
-             .prefetch_related('comments__author__profile')
+             .prefetch_related('comments__author__profile', 'total_like')
              .order_by('-created_at')
              .filter(approved=True))
     return render(request, "blog_app/index.html", {"blog" : blogs})
 
 @login_required(login_url="log-in")
 def gallery(request):
-    author = Profile.objects.get(user_id=request.user.id)
-    album = Album.objects.get(author=author.user_id)
-    gallery = Gallery.objects.filter(album=album)
-    # return HttpResponse(images)
-    return render(request, "blog_app/gallery.html",{"gallery" : gallery})
-  
+    album = Album.objects.filter(author__user=request.user).prefetch_related("images")
+    return render(request, "blog_app/gallery.html",{"album" : album})
+    # album = get_list_or_404(Album.objects.prefetch_related("images"), author_id=request.user.id)
+    # # album = get_list_or_404(Album, author_id=request.user.id)
+    # images = album.images.all()
+      
 #------------------- Authentication ----------------------
 @unautorized_access
 def registration(request):
@@ -142,7 +143,8 @@ def update_blog(request, id):
     if form.is_valid():
         form.save()
         messages.success(request, "Blog updated")
-        return redirect("view-profile")
+        url = reverse("view-profile") + f"#blog-{blog.id}"
+        return redirect(url)
     return  render(request, "blog_app/update_blog.html", {"form" : form})
 
 @login_required(login_url="log-in")
@@ -180,18 +182,71 @@ def blog_comment(request, id):
 
 @login_required(login_url='log-in')
 def delete_comment(request, id):
-    comment = Comment.objects.get(id=id)
-    blog = Blog.objects.get(id=comment.blog_id)
-    if blog.author == request.user:
+    if request.method != "POST":
+        return HttpResponseNotAllowed(['POST'])
+    
+    comment = get_object_or_404(Comment, pk=id)
+    blog = comment.blog
+    
+    if (blog.author == request.user or comment.author == request.user or request.user.is_staff):
         comment.delete()
-        messages.success(request, "Comment Successfully deleted by author")
-        return redirect("home") 
-    if comment.author != request.user and not request.user.is_staff:
-        messages.error(request, "Not allowed")
-        return redirect("home")
-    comment.delete()
-    messages.success(request, "Comment Successfully deleted")
-    return redirect("home") 
+        messages.success(request, "Comment deleted")
+        url = reverse("home") + f"#blog-{blog.id}"
+        return redirect(url) 
+    
+    messages.error(request, "You are not allowedto delete comment")
+    url = reverse("home") + f"#blog-{blog.id}"
+    return redirect(url) 
+
+@login_required(login_url="log-in")
+def block_comment(request, id):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+    
+    comment = get_object_or_404(Comment, pk=id)
+    blog = comment.blog
+    
+    if (blog.author == request.user or request.user.is_staff):
+        comment.block_comment = True
+        comment.save()
+        messages.success(request, "Comment blocked")
+        url = reverse("home") + f"#blog-{blog.id}"
+        return redirect(url)
+    messages.error(request, "Not allowed")
+    url = reverse("home") + f"#blog-{blog.id}"
+    return redirect(url)
+
+@login_required(login_url="log-in")
+def count_like(request, id):
+    post = get_object_or_404(Blog, id=id)
+    
+    like, created = Liked.objects.get_or_create(user=request.user, post=post)
+    
+    if not created:
+        like.delete()
+        messages.error(request, "Unliked")
+    else:
+         messages.success(request, "Liked")
+     
+    
+    url = reverse("home") + f"#blog-{id}"
+    return redirect(url)
+    
+    # try:
+    #     like = Like.objects.get(post_id = id)
+    #     if like.user_id != request.user.id:
+    #         like.count = like.count + 1
+    #         like.user_id = request.user.id
+    #         like.save()
+    #         messages.success(request, "Liked")
+    #         return redirect("home")
+    #     else:
+    #         messages.error(request, "Oops!!")
+    #         return redirect("home")
+    # except Like.DoesNotExist:
+    #     Like.objects.create(user_id=request.user.id,post_id=id,count= + 1)
+    #     messages.error(request, "Oops! There has been some error")
+    #     return redirect("home")
 
 #----------------- Admin section --------------------------
 @login_required(login_url="log-in")

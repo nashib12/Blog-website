@@ -41,6 +41,7 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=True)
     tags = models.ManyToManyField(Tag, default=None, blank=True)
+    likes = models.PositiveIntegerField(default=0, blank=True)
     
     def __str__(self):
         return self.title
@@ -66,24 +67,54 @@ class Comment(models.Model):
         verbose_name_plural = 'Comments'
 
 class Album(models.Model):
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="author")
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="albums")
     title = models.CharField(max_length=200)
+    descriprion = models.CharField(max_length=255, default="No Description", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.title
     
     class Meta:
-        db_table = 'Album Table'
+        db_table = 'album'
         managed = True
         verbose_name = 'Album'
         verbose_name_plural = 'Albums'
+        ordering = ["-created_at"]
 
 class Gallery(models.Model):
-    album = models.ForeignKey(Album, related_name="gallery", on_delete=models.CASCADE, default=None)
+    album = models.ForeignKey(Album, related_name="images", on_delete=models.CASCADE, default=None)
     images = models.ImageField(upload_to="gallery_image/")
+    captions = models.CharField(max_length=50,default="", blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        db_table = 'Gallery'
+        db_table = 'gallery'
         managed = True
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
+        ordering = ["-uploaded_at"]
+        
+# class Like(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="users")
+#     post = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="posts")
+#     count = models.IntegerField(default=0)
+    
+#     class Meta:
+#         db_table = 'like'
+#         managed = True
+#         verbose_name = 'Like'
+#         verbose_name_plural = 'Likes'
+
+class Liked(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="total_like")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'liked'
+        managed = True
+        verbose_name = 'Like'
+        verbose_name_plural = 'Likes'
+        unique_together = ['user', 'post']
+    

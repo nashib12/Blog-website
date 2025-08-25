@@ -5,8 +5,8 @@
 {% endblock title %}
 {% block content %}
 <div class="container mt-5">
-    {% for item in blog %}
-    <div class="card mb-4 border-0 rounded-4 blog-container ">
+  {% for item in blog %}
+    <div id="blog-{{item.id}}" class="card mb-4 border-0 rounded-4 blog-container">
 
       <!-- Post Header -->
       <div class="card-header bg-white border-1 border-bottom d-flex align-items-center py-2">
@@ -32,9 +32,11 @@
 
       <!-- Post Footer -->
       <div class="card-footer bg-white border-1 border-top d-flex justify-content-around">
-        <a href="#" class="post-action">
+       <div>
+          <a href="{% url 'like' item.id %}" class="post-action">
           <i class="fa-regular fa-thumbs-up"></i> Like
-        </a>
+          </a>&nbsp;<strong class="fs-5">{{item.total_like.all.count}}</strong>
+        </div>
         <a href="{% url 'comment' item.id %}" class="post-action">
           <i class="fa-regular fa-comment"></i> Comment
         </a>
@@ -48,24 +50,39 @@
       </div>
     <!-- Blog Comments -->
     {% for c in item.comments.all %}
-      <div class="card-header bg-white border-1 border-top d-flex flex-column align-items-start py-2">
-        <div class="d-flex flex-row">
-          {% with commenter=c.author.profile %}
-            <img src="{{ commenter.profile_pic.url }}" alt="" class="rounded-circle me-2" style="width:25px; height:25px; object-fit:cover;">
-            {% if commenter.first_name is none %}
-              <h6 class="fw-bold fs-5">{{c.author.username}}</h6>
-            {% else %}
-            <h6 class="fw-bold fs-5">{{ commenter.first_name }} {{ commenter.last_name }}</h6>
-            {% endif %}
-          {% endwith %}
-        </div>
-        <p class="fs-5 text-muted text-start ms-5">{{ c.comments }}</p>
-      </div>
-    {% empty %}
+      {% if not c.block_comment %}
+          <div class="card-header bg-white border-1 border-top d-flex flex-column align-items-start py-2">
+            <div class="d-flex flex-row">
+              {% with commenter=c.author.profile %}
+                <img src="{{ commenter.profile_pic.url }}" alt="" class="rounded-circle me-2" style="width:25px; height:25px; object-fit:cover;">
+                {% if commenter.first_name is none %}
+                  <h6 class="fw-bold fs-5">{{c.author.username}}</h6>
+                {% else %}
+                <h6 class="fw-bold fs-5">{{ commenter.first_name }} {{ commenter.last_name }}</h6>
+                {% endif %}
+              {% endwith %}
+            </div>
+            <p class="fs-5 text-muted text-start ms-5">{{ c.comments }}</p>
+          </div>
+          <div class="dropdown d-flex align-items-start justify-content-end me-4">
+            <a class="text-decoration-none text-dark fs-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></a>
+            <ul class="dropdown-menu">
+              <li><form action="{% url 'delete-comment' c.id %}" method="post" style="display: inline;" class="dropdown-item">
+                {% csrf_token %}
+                <button class="btn btn-link text-danger text-decoration-none" type="submit">Delete Comment</button>
+              </form></li>
+               <li><form action="{% url 'block-comment' c.id %}" method="post" style="display: inline;" class="dropdown-item">
+                {% csrf_token %}
+                <button class="btn btn-link text-warning text-decoration-none" type="submit">Block Comment</button>
+              </form></li>
+            </ul>
+          </div>
+      {% endif %}
+      {% empty %}
       <div class="px-3 text-muted">No comments yet.</div>
     {% endfor %}
     </div>
-    {% endfor %}
+  {% endfor %}
 </div>
 {% endblock content %}
 

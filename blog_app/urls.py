@@ -20,6 +20,8 @@ urlpatterns = [
     path("view_profile/",view_profile,name="view-profile"),
     path("comment/<int:id>",blog_comment,name="comment"),
     path("delete_comment/<int:id>",delete_comment,name='delete-comment'),
+    path("block_comment/<int:id>",block_comment,name="block-comment"),
+    path("like_post/<int:id>", count_like,name="like"),
     
     #-------------- Admin section ----------------
     path("dashboard/",view_dashboard,name="dashboard"),

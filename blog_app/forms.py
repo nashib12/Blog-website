@@ -120,29 +120,33 @@ class CommentForm(forms.ModelForm):
 class AlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        fields = ('title', )
+        fields = ('title', 'descriprion')
         
         labels = {
             'title' : '',
+            'descriprion' : ''
         }
         
         widgets = {
-            'title' : forms.TextInput(attrs={'class' : 'form-control mb-3 fs-4', 'placeholder' : 'Choose your album title'})
+            'title' : forms.TextInput(attrs={'class' : 'form-control mb-3 fs-4', 'placeholder' : 'Choose your album title'}),
+            'descriprion' : forms.TextInput(attrs={'class' : 'form-control mb-3 fs-4', 'placeholder' : 'Enter the album description'})
         }
 
 class GalleryForm(forms.ModelForm):
     class Meta:
         model = Gallery
-        fields = ('album', 'images')
+        fields = ('album', 'images', 'captions')
         
         labels = {
             'album' : '',
             'images' : '',
+            'captions' : '',
         }
         
         widgets = {
             'album' : forms.Select(attrs={'class' : 'form-control mb-3 fs-4'}),
-            'images' : forms.FileInput(attrs={'class' : 'form-control mb-3'})
+            'images' : forms.FileInput(attrs={'class' : 'form-control mb-3'}),
+            'captions' : forms.TextInput(attrs={'class' : 'form-control fs-4 mb-3', 'placeholder' : 'Enter image caption'})
         } 
     
     def __init__(self, *args, **kwargs):
