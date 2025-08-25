@@ -117,4 +117,21 @@ class Liked(models.Model):
         verbose_name = 'Like'
         verbose_name_plural = 'Likes'
         unique_together = ['user', 'post']
+        
+class Follow(models.Model):
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers", blank=True, null=True)
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following", blank=True, null=True)
     
+    class Meta:
+        db_table = 'follower'
+        managed = True 
+        
+class BlockUser(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="blockusers")
+    block_status = models.BooleanField(default=False)
+    blocked_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'blockuser'
+        managed = True
+        ordering = ['-blocked_at']

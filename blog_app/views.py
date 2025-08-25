@@ -9,7 +9,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.urls import reverse
 
-from .models import Blog, Profile, Comment, Album, Liked
+from .models import Blog, Profile, Comment, Album, Liked, Follow
 from .forms import *
 from .validators import *
 from .decorators import unautorized_access, admin_only
@@ -120,8 +120,7 @@ def change_password(request):
             messages.success(request, "Password change successfully")
             return redirect("log-in")
     return render(request, "authenticate/change_password.html", {"form" : form})
-        
-        
+
 #---------------- Blog Section ----------------------
 @login_required(login_url="log-in")
 def create_blog(request):
@@ -313,3 +312,40 @@ def create_album(request):
         messages.success(request, "Album successfully added")
         return redirect("view-profile")
     return render(request, "gallery/add_album.html", {"form" : form})
+
+# -------------- Follow and Unfollow section -----------------------------
+@login_required(login_url="log-in")
+def follow_user(request, id):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+    
+    follower, created = Follow.objects.get_or_create(follower_id=request.user.id, followed_id=id)
+    
+    if not created:
+        follower.delete()
+        messages.error(request, "Successfully unfollowed")
+    else:    
+        messages.success(request, "Successfully followed")
+
+    return redirect("home")
+
+@login_required(login_url="log-in")
+def block_user(requset):
+    pass
+
+@login_required(login_url="log-in")
+def view_user_profile(request, id):
+    profile = get_object_or_404(User.objects.select_related("profile"), pk=id)
+    
+    # Followers = how many users follow this profile
+    followers_count = Follow.objects.filter(followed=profile).count()
+
+    # Following = how many users this profile follows
+    following_count = Follow.objects.filter(follower=profile).count()
+    
+    cont_dict = {
+        "profile" : profile,
+        "followers_count" : followers_count,
+        "following_count" : following_count,
+    }
+    return render(request, "blog_app/view_user_profile.html", cont_dict) 

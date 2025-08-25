@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+  User Profile
+{% endblock title %}
+
+{% block content %}
+  
+<div class="container mt-5">
+    {% if profile %}
+      {% with i=profile.profile  %}
+        <h2>{{i.first_name}} {{i.last_name}}</h2>
+        {% if i.profile_pic %}
+          <img src="{{i.profile_pic.url}}" alt="" class="img-fluid card-img rounded-circle w-50 h-50">
+        {% endif %}
+      {% endwith %}
+      {% if request.user != profile %}
+      <form action="{% url 'follow-user' profile.id %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-lg btn-white text-dark border border-2 border-dark rounded-3" type="submit">Follow</button>
+      </form>
+      {% endif %}
+      <p class="fs-4 fw-bold">Follower: {{followers_count}}</p>
+      <p class="fs-4 fw-bold">Following: {{following_count}}</p>
+    {% endif %}
+</div>
+
+{% endblock content %}

@@ -31,4 +31,9 @@ urlpatterns = [
     # -------------------- Gallery Section --------------
     path("add_image/",add_gallery_img,name="add-image"),
     path("album/",create_album,name="create-album"),
+    
+    # ----------- Follower section -----------------
+    path("follow_user/<int:id>",follow_user,name="follow-user"),
+    path("block_user/",block_user,name="block-user"),
+    path("user_detail_view/<int:id>",view_user_profile,name="view-user-profile"),
 ]
