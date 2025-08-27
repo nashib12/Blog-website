@@ -12,8 +12,8 @@ class ProfileAdmin(admin.ModelAdmin):
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('author', 'title')
     ordering = ('title',)
-    list_filter = ('title', 'author')
-    fields = ['name', 'title' , 'content', 'blog_image']
+    list_filter = ('title', 'tags')
+    fields = ['author', 'title' , 'content', 'blog_image', 'tags']
     
 admin.site.register(Tag)
 

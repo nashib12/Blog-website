@@ -9,7 +9,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.urls import reverse
 
-from .models import Blog, Profile, Comment, Album, Liked, Follow
+from .models import Blog, Profile, Comment, Album, Liked, Follow, Tag
 from .forms import *
 from .validators import *
 from .decorators import unautorized_access, admin_only
@@ -22,7 +22,21 @@ def home(request):
              .prefetch_related('comments__author__profile', 'total_like')
              .order_by('-created_at')
              .filter(approved=True))
-    return render(request, "blog_app/index.html", {"blog" : blogs})
+    tags = Tag.objects.all()
+    tagid = request.GET.get('tagid')
+    searched = request.GET.get('searched')
+    
+    if tagid and tagid.isdigit():
+        blogs = blogs.filter(tags__id = tagid)
+    
+    if searched:
+        blogs = blogs.filter(title__icontains = searched)
+   
+    cont_dict = {
+        "blog" : blogs,
+        "tags" : tags,
+    }
+    return render(request, "blog_app/index.html", cont_dict)
 
 @login_required(login_url="log-in")
 def gallery(request):
@@ -246,7 +260,7 @@ def count_like(request, id):
     #     Like.objects.create(user_id=request.user.id,post_id=id,count= + 1)
     #     messages.error(request, "Oops! There has been some error")
     #     return redirect("home")
-
+    
 #----------------- Admin section --------------------------
 @login_required(login_url="log-in")
 @admin_only

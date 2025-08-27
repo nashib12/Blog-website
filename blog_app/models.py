@@ -40,8 +40,7 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=True)
-    tags = models.ManyToManyField(Tag, default=None, blank=True)
-    likes = models.PositiveIntegerField(default=0, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, default=0)
     
     def __str__(self):
         return self.title

@@ -5,7 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
 from tinymce.widgets import TinyMCE
 
-from .models import Profile, Blog, Comment, Album, Gallery
+from .models import Profile, Blog, Comment, Album, Gallery, Tag
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control fs-4', 'id' : 'username'}))
@@ -75,17 +75,19 @@ class ProfileCreationForm(forms.ModelForm):
 class BlogCreationForm(forms.ModelForm):
     class Meta:
         model = Blog
-        fields = ('title', 'content', 'blog_image')
+        fields = ('title', 'content', 'blog_image', 'tags')
         labels = {
             'title' : '',
             'content' : '',
-            'blog_image' : ''
+            'blog_image' : '',
+            'tags' : ','
         }
         
         widgets = {
             'title' : forms.TextInput(attrs={'class' : 'form-control fs-4', 'id' : 'title'}),
             'content' : TinyMCE(attrs={'cols': 15, 'row' : 10,'class' : 'form-control fs-4', 'id' : 'content'}),
             'blog_image' : forms.FileInput(attrs={'class' : 'form-control fs-4', 'id' : 'blog-image'}),
+            'tags' : forms.SelectMultiple(attrs={'class' : 'form-control fs-4', 'id' : 'tags'}),
         }
 
 class CustomPasswordChangeForm(PasswordChangeForm):
@@ -153,3 +155,19 @@ class GalleryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['album'].empty_label = "Select a album"
         
+# class TagForm(forms.ModelForm):
+#     class Meta:
+#         model = Tag
+#         fields = ('tag',)
+        
+#         label = {
+#             'tag' : '',
+#         }
+        
+#         widgets = {
+#             'tag' : forms.Select(attrs={'class' : 'btn btn-lg btn-light text-dark border-dark rounded-2 fs-4'}),
+#         }
+        
+#         def __init__(self, *args, **kwargs):
+#             super().__init__(*args, **kwargs)
+#             self.fields['tag'].empty_label = "Filter Post"

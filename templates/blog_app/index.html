@@ -5,7 +5,16 @@
 {% endblock title %}
 {% block content %}
 <div class="container mt-5">
-
+  <button class="btn btn-lg btn-light text-dark border border-dark rounded-2  dropdown-toggle" data-bs-toggle="dropdown">Filter Posts</button>
+  <ul class="dropdown-menu">
+    {% for t in tags %}
+      <li><a href="?tagid={{t.id}}" class="dropdown-item fs-4" >{{t.tag}}</a></li>
+    {% endfor %}
+  </ul>
+  <form class="d-flex" role="search" method="get" action="{% url 'home' %}">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched"/>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
     {% for item in blog %}
     <div id="blog-{{item.id}}" class="card mb-4 border-0 rounded-4 blog-container">
 
